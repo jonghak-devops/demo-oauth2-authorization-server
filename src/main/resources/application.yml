@@ -4,3 +4,15 @@ server:
 spring:
   application:
     name: demo-oauth2-authorization-server
+  cloud:
+    aws:
+      credentials:
+        profile:
+          name: backend-developer
+  config:
+    import: aws-parameterstore:/devops/demo-auth2-client/mysql
+
+logging:
+  level:
+    org.springframework.security: debug
+    io.awspring.cloud: debug
