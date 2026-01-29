@@ -10,7 +10,7 @@ spring:
         profile:
           name: backend-developer
   config:
-    import: aws-parameterstore:/devops/demo-auth2-client/mysql
+    import: aws-parameterstore:/devops/demo-auth2-client/mysql?prefix=spring.datasource
 
 logging:
   level:

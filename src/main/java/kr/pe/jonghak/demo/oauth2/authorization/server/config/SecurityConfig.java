@@ -1,27 +1,29 @@
 package kr.pe.jonghak.demo.oauth2.authorization.server.config;
 
-import java.util.Collections;
-import java.util.UUID;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.oauth2.core.AuthorizationGrantType;
-import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
-import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationConsentService;
+import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationService;
+import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationConsentService;
+import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
+import org.springframework.security.oauth2.server.authorization.client.JdbcRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 
 @Configuration
 public class SecurityConfig {
     @Bean
-    public RegisteredClientRepository registeredClientRepository() {
-        return new InMemoryRegisteredClientRepository(Collections.singletonList(
-            RegisteredClient
-                .withId(UUID.randomUUID().toString())
-                .clientId("demo-client")
-                .clientSecret("{noop}secret")
-                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-                .scope("resource:read")
-                .build()
-        ));
+    public RegisteredClientRepository registeredClientRepository(JdbcTemplate jdbcTemplate) {
+        return new JdbcRegisteredClientRepository(jdbcTemplate);
+    }
+
+    @Bean
+    public OAuth2AuthorizationService authorizationService(JdbcTemplate jdbcTemplate, RegisteredClientRepository registeredClientRepository) {
+        return new JdbcOAuth2AuthorizationService(jdbcTemplate, registeredClientRepository);
+    }
+
+    @Bean
+    public OAuth2AuthorizationConsentService authorizationConsentService(JdbcTemplate jdbcTemplate, RegisteredClientRepository registeredClientRepository) {
+        return new JdbcOAuth2AuthorizationConsentService(jdbcTemplate, registeredClientRepository);
     }
 }
