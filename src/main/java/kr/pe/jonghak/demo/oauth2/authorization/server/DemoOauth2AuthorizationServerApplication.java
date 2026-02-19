@@ -26,6 +26,7 @@ public class DemoOauth2AuthorizationServerApplication implements CommandLineRunn
                 .clientSecret("{noop}secret")
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
                 .scope("resource:read")
+                .scope("secret:read")
                 .build());
         }
     }
